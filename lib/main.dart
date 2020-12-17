@@ -24,46 +24,73 @@ class MyApp extends StatefulWidget {
 //Class with the state of thw Widgets
 //It is connected with the class "MyApp" to load a news state if data changes
 class _MyAppState extends State<MyApp> {
-  var _questions = [
-    {
-      'questionText': 'What\'s your favorite color?',
-      'answers': ['blue', 'black', 'white', 'green']
-    },
-    {
-      'questionText': 'What\'s your favorite animal?',
-      'answers': ['sheep', 'dog', 'cat', 'elephant']
-    },
-    {
-      'questionText': 'What\'s your favorite Band?',
-      'answers': ['Nirvana', 'Pearl Jam', 'Metallica', 'The Killers']
-    },
-  ];
 
   var _questionsIndex = 0;
+  var _totalScore = 0;
 
-  void _answerQuestion() {
+  void _resetQuiz() {
+    setState(() {
+      _questionsIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
+  void _answerQuestion(int score) {
     //setState() method tells flutter to re-run the build() method of the Widget in which you call setState()
     //because data has changed
+    _totalScore += score;
+
     setState(() {
       _questionsIndex = _questionsIndex + 1;
     });
   }
 
+  var _questions = [
+    {
+      'questionText': 'What\'s your favorite color?',
+      'answers': [
+        {'text': 'blue', 'score': 10},
+        {'text': 'black', 'score': 5},
+        {'text': 'white', 'score': 1},
+        {'text': 'green', 'score': 15}
+      ]
+    },
+    {
+      'questionText': 'What\'s your favorite animal?',
+      'answers': [
+        {'text': 'sheep', 'score': 10},
+        {'text': 'dog', 'score': 15},
+        {'text': 'cat', 'score': 20},
+        {'text': 'elephant', 'score': 25}
+      ]
+    },
+    {
+      'questionText': 'What\'s your favorite Band?',
+      'answers': [
+        {'text': 'Nirvana', 'score': 10},
+        {'text': 'Pearl Jam', 'score': 15},
+        {'text': 'Metallica', 'score': 30},
+        {'text': 'The Killers', 'score': 5}
+      ]
+    },
+  ];
+
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('My first app'),
-        ),
-        body: _questionsIndex < _questions.length
-            ? Quiz(
-                questions: _questions,
-                answerQuestion: _answerQuestion,
-                questionIndex: _questionsIndex,
-              )
-            : Result()
-      ),
+          appBar: AppBar(
+            title: Text('My first app'),
+          ),
+          body: _questionsIndex < _questions.length
+              ? Quiz(
+                  questions: _questions,
+                  answerQuestion: _answerQuestion,
+                  questionIndex: _questionsIndex,
+                )
+              : Result(_totalScore, _resetQuiz)),
     );
   }
 }
